@@ -4,20 +4,20 @@ import { VitePWA } from "vite-plugin-pwa";
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: "/",
+  base: "/food-diary/",
   plugins: [
     react(),
     VitePWA({
       registerType: "autoUpdate",
-      base: "/food-diary/",
       manifest: {
         name: "FoodDiary",
         short_name: "FoodDiary",
         description: "Дневник питания",
         theme_color: "#FBF1E5",
+        display: "standalone",
         icons: [
           {
-            src: "/pwa-icon.png",
+            src: "pwa-icon.png",
             sizes: "512x512",
             type: "image/png",
           },
