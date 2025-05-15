@@ -1,4 +1,5 @@
 import {
+  IconButton,
   Paper,
   Table,
   TableBody,
@@ -11,7 +12,8 @@ import type { Dayjs } from "dayjs";
 import type { FC } from "react";
 import type { Meal } from "../../core/types.ts";
 import { getFullKcal } from "../../core/meals";
-import { useMealsForDay } from "../CoreAdapter.tsx";
+import { onRemoveMeal, useMealsForDay } from "../CoreAdapter.tsx";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 interface Props {
   day: Dayjs;
@@ -29,6 +31,7 @@ export const DayTable: FC<Props> = ({ day }) => {
             <TableCell align="right">ККал (на 100г)</TableCell>
             <TableCell align="right">Масса (г)</TableCell>
             <TableCell align="right">Ккал (Всего)</TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>
@@ -38,6 +41,11 @@ export const DayTable: FC<Props> = ({ day }) => {
               <TableCell align="right">{meal.kcal}</TableCell>
               <TableCell align="right">{meal.weight}</TableCell>
               <TableCell align="right">{getFullKcal(meal)}</TableCell>
+              <TableCell>
+                <IconButton color={"error"} onClick={() => onRemoveMeal(meal)}>
+                  <DeleteIcon />
+                </IconButton>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
