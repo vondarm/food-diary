@@ -28,9 +28,9 @@ export const DayTable: FC<Props> = ({ day }) => {
         <TableHead>
           <TableRow>
             <TableCell>Название</TableCell>
-            <TableCell align="right">ККал (на 100г)</TableCell>
+            <TableCell align="right">Кал (на 100г)</TableCell>
             <TableCell align="right">Масса (г)</TableCell>
-            <TableCell align="right">Ккал (Всего)</TableCell>
+            <TableCell align="right">Кал (Всего)</TableCell>
             <TableCell />
           </TableRow>
         </TableHead>

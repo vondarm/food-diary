@@ -47,7 +47,7 @@ export const NewMealForm: FC<{ day: Dayjs }> = ({ day }) => {
       />
       <TextField
         required
-        label="ККал (на 100 г)"
+        label="Кал (на 100 г)"
         variant="outlined"
         type="number"
         value={formValue.kcal || ""}
