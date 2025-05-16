@@ -7,6 +7,7 @@ import { DayDrawer } from "./DayDrawer";
 import "dayjs/locale/ru";
 import { onModalDay } from "./DayDrawer/data.ts";
 import dayjs from "dayjs";
+import { ConfirmDialog } from "./Dialog/ConfigmDialog.tsx";
 
 function App() {
   const openToday = () => {
@@ -23,6 +24,7 @@ function App() {
           </Button>
           <DayDrawer />
         </Stack>
+        <ConfirmDialog />
       </Subscribe>
     </LocalizationProvider>
   );

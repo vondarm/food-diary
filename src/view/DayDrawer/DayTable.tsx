@@ -14,6 +14,7 @@ import type { Meal } from "../../core/types.ts";
 import { getFullKcal } from "../../core/meals";
 import { onRemoveMeal, useMealsForDay } from "../CoreAdapter.tsx";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { openConfirm } from "../Dialog/confirmDialog.ts";
 
 interface Props {
   day: Dayjs;
@@ -21,6 +22,12 @@ interface Props {
 
 export const DayTable: FC<Props> = ({ day }) => {
   const meals = useMealsForDay(day);
+
+  const onDelete = (meal: Meal) => () =>
+    openConfirm({
+      message: `Вы уверены что хотите удалить ${meal.name}?`,
+      onConfirm: () => onRemoveMeal(meal),
+    });
 
   return (
     <TableContainer component={Paper}>
@@ -42,7 +49,7 @@ export const DayTable: FC<Props> = ({ day }) => {
               <TableCell align="right">{meal.weight}</TableCell>
               <TableCell align="right">{getFullKcal(meal)}</TableCell>
               <TableCell>
-                <IconButton color={"error"} onClick={() => onRemoveMeal(meal)}>
+                <IconButton color={"error"} onClick={onDelete(meal)}>
                   <DeleteIcon />
                 </IconButton>
               </TableCell>
