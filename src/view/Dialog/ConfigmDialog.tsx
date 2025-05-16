@@ -1,11 +1,5 @@
 import { useConfirmDialog, closeConfirm } from "./confirmDialog.ts";
-import {
-  Button,
-  ClickAwayListener,
-  Dialog,
-  DialogActions,
-  DialogTitle,
-} from "@mui/material";
+import { Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
 
 export const ConfirmDialog = () => {
   const config = useConfirmDialog();
