@@ -53,7 +53,7 @@ export const MealTemplatesDialog: FC<Props> = ({ onChoose, buttonText }) => {
               <ListItemButton onClick={choose(mealTemplate)}>
                 <ListItemText
                   primary={mealTemplate.name}
-                  secondary={`${mealTemplate.kcal} Кал, ${mealTemplate.weight} г.`}
+                  secondary={`${Math.round(mealTemplate.kcal)} Кал, ${Math.round(mealTemplate.weight)} г.`}
                 />
                 <ConfirmDialog
                   message={`Удалить шаблон ${mealTemplate.name}?`}
