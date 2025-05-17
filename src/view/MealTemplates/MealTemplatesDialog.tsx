@@ -28,6 +28,7 @@ export const MealTemplatesDialog: FC<Props> = ({ onChoose, buttonText }) => {
   const open = () => setIsOpen(true);
   const choose = (mealTemplate: MealTemplate) => () => {
     onChoose(mealTemplate);
+    close();
   };
   const deleteTemplate = (mealTemplate: MealTemplate) => () =>
     onRemoveMealTemplate(mealTemplate);
