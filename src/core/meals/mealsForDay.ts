@@ -6,7 +6,7 @@ import {
 } from "../cache.ts";
 import type { Meal } from "../types.ts";
 import { filter, map, merge } from "rxjs";
-import { type IMealActions } from "./actions.ts";
+import type { IMealActions } from "./actionsInterface.ts";
 
 export const getMealsForDay$ =
   (

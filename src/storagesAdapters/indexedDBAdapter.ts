@@ -1,10 +1,16 @@
-import type { Meal } from "../core/types.ts";
-import type { IStorageInterface } from "../core/storageInterface.ts";
+import { createMealTemplatesStore } from "./migrations/1_createMealTemplatesStore.ts";
+import { initMealsDb } from "./migrations/0_initMealsDb.ts";
+import type { IMealStorageInterface } from "../core/meals/storageInterface.ts";
+import type { IMealTemplateStorageInterface } from "../core/mealTemplates/storageInterface.ts";
+import { addMeal, getMealsForInterval, removeMeal } from "./meals.ts";
+import {
+  addMealTemplate,
+  getMealTemplates,
+  removeMealTemplate,
+} from "./mealTemplates.ts";
 
 const FOOD_DIARY_DB_NAME = "foodDiary";
-const MEALS_STORE_NAME = "meals";
-const MEAL_ID_PROPERTY = "uuid";
-const MEAL_CREATED_AT_PROPERTY = "dateTime";
+const DB_VERSION = 2;
 
 let foodDiaryDB: IDBDatabase | null = null;
 
@@ -12,8 +18,10 @@ const getFoodDiaryDB = async (): Promise<IDBDatabase> => {
   if (foodDiaryDB) return foodDiaryDB;
 
   return new Promise((resolve) => {
-    const request = indexedDB.open(FOOD_DIARY_DB_NAME, 1);
-    request.onupgradeneeded = () => initDB(request.result);
+    const request = indexedDB.open(FOOD_DIARY_DB_NAME, DB_VERSION);
+    request.onupgradeneeded = (event) => {
+      upgradeDB(request.result, event.oldVersion);
+    };
     request.onsuccess = () => {
       foodDiaryDB = request.result;
       resolve(request.result);
@@ -21,59 +29,22 @@ const getFoodDiaryDB = async (): Promise<IDBDatabase> => {
   });
 };
 
-const initDB = (db: IDBDatabase) => {
-  const mealsStore = db.createObjectStore(MEALS_STORE_NAME, {
-    keyPath: MEAL_ID_PROPERTY,
-  });
-  mealsStore.createIndex(MEAL_CREATED_AT_PROPERTY, MEAL_CREATED_AT_PROPERTY, {
-    unique: false,
-  });
+const upgradeDB = (db: IDBDatabase, oldVersion: number) => {
+  switch (oldVersion) {
+    case 0:
+      initMealsDb(db);
+    case 1:
+      createMealTemplatesStore(db);
+  }
 };
 
-const getMealsForInterval: IStorageInterface["getMealsForInterval"] = async (
-  from,
-  to,
-) => {
-  const foodDiaryDB = await getFoodDiaryDB();
-  const tx = foodDiaryDB.transaction(MEALS_STORE_NAME, "readonly");
-  const store = tx.objectStore(MEALS_STORE_NAME);
-  const index = store.index(MEAL_CREATED_AT_PROPERTY);
+export const indexedDBAdapter: IMealStorageInterface &
+  IMealTemplateStorageInterface = {
+  addMeal: addMeal(getFoodDiaryDB),
+  removeMeal: removeMeal(getFoodDiaryDB),
+  getMealsForInterval: getMealsForInterval(getFoodDiaryDB),
 
-  const range = IDBKeyRange.bound(from, to, false, true);
-  const request = index.getAll(range);
-
-  return new Promise((resolve, reject) => {
-    request.onsuccess = () => resolve(request.result);
-    request.onerror = reject;
-  });
-};
-
-const addMeal: IStorageInterface["addMeal"] = async (meal: Meal) => {
-  const foodDiaryDB = await getFoodDiaryDB();
-  const tx = foodDiaryDB.transaction(MEALS_STORE_NAME, "readwrite");
-  const store = tx.objectStore(MEALS_STORE_NAME);
-  store.add(meal);
-
-  return new Promise((resolve, reject) => {
-    tx.oncomplete = () => resolve(meal);
-    tx.onerror = reject;
-  });
-};
-
-const removeMeal: IStorageInterface["removeMeal"] = async (meal: Meal) => {
-  const foodDiaryDB = await getFoodDiaryDB();
-  const tx = foodDiaryDB.transaction(MEALS_STORE_NAME, "readwrite");
-  const store = tx.objectStore(MEALS_STORE_NAME);
-  store.delete(meal.uuid);
-
-  return new Promise((resolve, reject) => {
-    tx.oncomplete = () => resolve();
-    tx.onerror = reject;
-  });
-};
-
-export const indexedDBAdapter: IStorageInterface = {
-  removeMeal,
-  addMeal,
-  getMealsForInterval,
+  addMealTemplate: addMealTemplate(getFoodDiaryDB),
+  removeMealTemplate: removeMealTemplate(getFoodDiaryDB),
+  getMealTemplates: getMealTemplates(getFoodDiaryDB),
 };

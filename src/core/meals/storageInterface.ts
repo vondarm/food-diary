@@ -1,6 +1,6 @@
-import type { Meal } from "./types.ts";
+import type { Meal } from "../types.ts";
 
-export interface IStorageInterface {
+export interface IMealStorageInterface {
   getMealsForInterval: (from: Date, to: Date) => Promise<Meal[]>;
   addMeal: (meal: Meal) => Promise<Meal>;
   removeMeal: (meal: Meal) => Promise<void>;

@@ -5,3 +5,10 @@ export type Meal = {
   kcal: number;
   weight: number;
 };
+
+export type MealTemplate = {
+  uuid: string;
+  name: string;
+  kcal: number;
+  weight: number;
+};

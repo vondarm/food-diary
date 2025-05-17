@@ -66,6 +66,7 @@ export const useNewMealFrom = (day: Dayjs) => {
   return {
     formValue,
     setFieldValue,
+    setFormValue,
     submit,
     cancel,
     isError,

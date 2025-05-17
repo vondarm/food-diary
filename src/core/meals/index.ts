@@ -1,9 +1,9 @@
-import type { IStorageInterface } from "../storageInterface.ts";
+import type { IMealStorageInterface } from "./storageInterface.ts";
 import type { Meal } from "../types.ts";
 import { map, share, tap } from "rxjs";
 import type { Dayjs } from "dayjs";
 import { getMealsForDay$ } from "./mealsForDay";
-import type { IMealActions } from "./actions.ts";
+import type { IMealActions } from "./actionsInterface.ts";
 
 export const getFullKcal = (meal: Meal) => (meal.weight / 100) * meal.kcal;
 
@@ -11,8 +11,8 @@ const getFullKcalForMeals = (meals: Meal[]) => {
   return meals.reduce((sum: number, meal) => sum + getFullKcal(meal), 0);
 };
 
-export const initFoodDiary = (
-  storage: IStorageInterface,
+export const initMeals = (
+  storage: IMealStorageInterface,
   actions: IMealActions,
 ) => {
   // TODO обработка ошибок обращения к внешнему апи
@@ -27,6 +27,9 @@ export const initFoodDiary = (
     ),
   };
 
+  requestActions.add$.subscribe();
+  requestActions.remove$.subscribe();
+
   const getMealsForDayWithStorage$ = getMealsForDay$(
     storage.getMealsForInterval,
     requestActions,
@@ -38,12 +41,6 @@ export const initFoodDiary = (
 
   return {
     getMealsForDay$: getMealsForDayWithStorage$,
-    addMeal: async (meal: Meal) => {
-      await storage.addMeal(meal);
-    },
-    removeMeal: async (meal: Meal) => {
-      await storage.removeMeal(meal);
-    },
     getFullKcalForDay$,
   };
 };

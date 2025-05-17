@@ -12,9 +12,15 @@ import type { Dayjs } from "dayjs";
 import type { FC } from "react";
 import type { Meal } from "../../core/types.ts";
 import { getFullKcal } from "../../core/meals";
-import { onRemoveMeal, useMealsForDay } from "../CoreAdapter.tsx";
+import {
+  onAddMealTemplate,
+  onRemoveMeal,
+  useMealsForDay,
+} from "../CoreAdapter.tsx";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { openConfirm } from "../Dialog/confirmDialog.ts";
+import AssignmentAddIcon from "@mui/icons-material/AssignmentAdd";
+import { v4 } from "uuid";
+import { ConfirmDialog } from "../common/Dialog/ConfigmDialog.tsx";
 
 interface Props {
   day: Dayjs;
@@ -23,10 +29,13 @@ interface Props {
 export const DayTable: FC<Props> = ({ day }) => {
   const meals = useMealsForDay(day);
 
-  const onDelete = (meal: Meal) => () =>
-    openConfirm({
-      message: `Вы уверены что хотите удалить ${meal.name}?`,
-      onConfirm: () => onRemoveMeal(meal),
+  const deleteMeal = (meal: Meal) => () => onRemoveMeal(meal);
+  const saveToTemplates = (meal: Meal) => () =>
+    onAddMealTemplate({
+      uuid: v4(),
+      weight: meal.weight,
+      kcal: meal.kcal,
+      name: meal.name,
     });
 
   return (
@@ -49,9 +58,24 @@ export const DayTable: FC<Props> = ({ day }) => {
               <TableCell align="right">{meal.weight}</TableCell>
               <TableCell align="right">{getFullKcal(meal)}</TableCell>
               <TableCell>
-                <IconButton color={"error"} onClick={onDelete(meal)}>
-                  <DeleteIcon />
-                </IconButton>
+                <ConfirmDialog
+                  message={`Вы уверены что хотите удалить ${meal.name}?`}
+                  onConfirm={deleteMeal(meal)}
+                  renderTrigger={(onClick) => (
+                    <IconButton color={"error"} onClick={onClick}>
+                      <DeleteIcon />
+                    </IconButton>
+                  )}
+                />
+                <ConfirmDialog
+                  message={`Добавить ${meal.name} в шаблоны?`}
+                  onConfirm={saveToTemplates(meal)}
+                  renderTrigger={(onClick) => (
+                    <IconButton color={"info"} onClick={onClick}>
+                      <AssignmentAddIcon />
+                    </IconButton>
+                  )}
+                />
               </TableCell>
             </TableRow>
           ))}

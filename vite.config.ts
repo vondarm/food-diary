@@ -9,6 +9,9 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: "autoUpdate",
+      workbox: {
+        disableDevLogs: true,
+      },
       manifest: {
         name: "FoodDiary",
         short_name: "FoodDiary",
