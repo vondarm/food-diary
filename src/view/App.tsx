@@ -4,8 +4,8 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Calendar } from "./Calendar";
 import { Subscribe } from "@react-rxjs/core";
 import { DayDrawer } from "./DayDrawer";
-import "dayjs/locale/ru";
 import { onModalDay } from "./DayDrawer/data.ts";
+import { WeekLabel } from "./WeekLabel.tsx";
 import dayjs from "dayjs";
 
 function App() {
@@ -22,6 +22,7 @@ function App() {
             Сегодня
           </Button>
           <DayDrawer />
+          <WeekLabel />
         </Stack>
       </Subscribe>
     </LocalizationProvider>

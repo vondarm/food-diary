@@ -2,8 +2,9 @@ import type { IMealStorageInterface } from "./storageInterface.ts";
 import type { Meal } from "../types.ts";
 import { map, share, tap } from "rxjs";
 import type { Dayjs } from "dayjs";
-import { getMealsForDay$ } from "./mealsForDay";
 import type { IMealActions } from "./actionsInterface.ts";
+import { createMealsListForWeek$ } from "./createMealsForWeek.ts";
+import { createMealsListForDay$ } from "./createMealsListForDay.ts";
 
 export const getFullKcal = (meal: Meal) => (meal.weight / 100) * meal.kcal;
 
@@ -30,7 +31,11 @@ export const initMeals = (
   requestActions.add$.subscribe();
   requestActions.remove$.subscribe();
 
-  const getMealsForDayWithStorage$ = getMealsForDay$(
+  const getMealsForDayWithStorage$ = createMealsListForDay$(
+    storage.getMealsForInterval,
+    requestActions,
+  );
+  const getMealsForWeekWithStorage$ = createMealsListForWeek$(
     storage.getMealsForInterval,
     requestActions,
   );
@@ -38,9 +43,19 @@ export const initMeals = (
   const getFullKcalForDay$ = (date: Dayjs) => {
     return getMealsForDayWithStorage$(date).pipe(map(getFullKcalForMeals));
   };
+  const getAverageKcalForWeek$ = (date: Dayjs) => {
+    return getMealsForWeekWithStorage$(date).pipe(
+      map(getFullKcalForMeals),
+      map(
+        (sum) =>
+          (sum / date.startOf("day").diff(date.weekday(0), "day")),
+      ),
+    );
+  };
 
   return {
     getMealsForDay$: getMealsForDayWithStorage$,
     getFullKcalForDay$,
+    getAverageKcalForWeek$,
   };
 };

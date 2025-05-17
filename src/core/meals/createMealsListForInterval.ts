@@ -8,16 +8,13 @@ import type { Meal } from "../types.ts";
 import { filter, map, merge } from "rxjs";
 import type { IMealActions } from "./actionsInterface.ts";
 
-export const getMealsForDay$ =
+export const createMealsListForInterval$ =
   (
     fetchMeals: (from: Date, to: Date) => Promise<Meal[]>,
     mealActions: IMealActions,
   ) =>
-  (date: Dayjs) => {
-    const from = date.startOf("day");
-    const to = from.add(1, "day");
-
-    return createListData<Meal>(
+  ({ from, to }: { from: Dayjs; to: Dayjs }) =>
+    createListData<Meal>(
       () => fetchMeals(from.toDate(), to.toDate()),
       merge(
         mealActions.add$.pipe(
@@ -34,4 +31,3 @@ export const getMealsForDay$ =
         ),
       ),
     );
-  };

@@ -23,7 +23,7 @@ const mealTemplates = initMealTemplates(indexedDBAdapter, {
 
 const [useMealsForDay] = bind(meals.getMealsForDay$, []);
 const [useKcalForDay] = bind(meals.getFullKcalForDay$, 0);
-
+const [useAverageKcalForWeek] = bind(meals.getAverageKcalForWeek$, 0);
 const [useMealTemplates] = bind(mealTemplates.getMealTemplates$, []);
 
 export {
@@ -31,6 +31,7 @@ export {
   onRemoveMeal,
   useKcalForDay,
   useMealsForDay,
+  useAverageKcalForWeek,
   useMealTemplates,
   onAddMealTemplate,
   onRemoveMealTemplate,
