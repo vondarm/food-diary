@@ -40,10 +40,10 @@ export const DayTable: FC<Props> = ({ day }) => {
 
   return (
     <TableContainer component={Paper}>
-      <Table stickyHeader>
+      <Table stickyHeader sx={{ tableLayout: "fixed", width: "100%" }}>
         <TableHead>
           <TableRow>
-            <TableCell>Название</TableCell>
+            <TableCell sx={{ width: "30%" }}>Название</TableCell>
             <TableCell align="right">Кал (на 100г)</TableCell>
             <TableCell align="right">Масса (г)</TableCell>
             <TableCell align="right">Кал (Всего)</TableCell>
@@ -53,11 +53,21 @@ export const DayTable: FC<Props> = ({ day }) => {
         <TableBody>
           {meals.map((meal: Meal) => (
             <TableRow key={meal.name}>
-              <TableCell>{meal.name}</TableCell>
-              <TableCell align="right">{meal.kcal}</TableCell>
-              <TableCell align="right">{meal.weight}</TableCell>
-              <TableCell align="right">{getFullKcal(meal)}</TableCell>
-              <TableCell>
+              <TableCell
+                sx={{
+                  width: "35%",
+                  textOverflow: "ellipsis",
+                  overflow: "hidden",
+                }}
+              >
+                {meal.name}
+              </TableCell>
+              <TableCell align="right">{Math.round(meal.kcal)}</TableCell>
+              <TableCell align="right">{Math.round(meal.weight)}</TableCell>
+              <TableCell align="right">
+                {Math.round(getFullKcal(meal))}
+              </TableCell>
+              <TableCell sx={{ flexWrap: "nowrap" }}>
                 <ConfirmDialog
                   message={`Вы уверены что хотите удалить ${meal.name}?`}
                   onConfirm={deleteMeal(meal)}

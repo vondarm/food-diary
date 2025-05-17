@@ -1,1 +1,0 @@
-if('serviceWorker' in navigator) navigator.serviceWorker.register('/food-diary/dev-sw.js?dev-sw', { scope: '/food-diary/', type: 'classic' })
