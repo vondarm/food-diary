@@ -35,9 +35,38 @@ export const createListData = <T extends Entity>(
   );
 };
 
-export const mapEntityToAddAction = <T extends Entity>(
+export const mapEntityToAddToListAction = <T extends Entity>(
   entity: T,
 ): AddToListAction<T> => ({ type: "addToList", item: entity });
-export const mapEntityToRemoveAction = <T extends Entity>(
+export const mapEntityToRemoveFromListAction = <T extends Entity>(
   entity: T,
 ): RemoveFromListAction<T> => ({ type: "removeFromList", item: entity });
+
+type UpdateAction<T extends Entity> = {
+  type: "update";
+  updater: (prev: T) => T;
+};
+
+export const createData = <T extends Entity>(
+  fetcher: () => Promise<T>,
+  actions$: Observable<UpdateAction<T>>,
+): Observable<T> => {
+  return new Observable<T>((observer) => {
+    fetcher().then((result) => observer.next(result));
+  }).pipe(
+    switchMap((initValue) =>
+      actions$.pipe(
+        startWith(void 0),
+        scan((value, action) => {
+          if (!action) return value;
+          if (action.type === "update") return action.updater(value);
+          return value;
+        }, initValue),
+      ),
+    ),
+  );
+};
+
+export const mapEntityToUpdateAction = <T extends Entity>(
+  entity: T,
+): UpdateAction<T> => ({ type: "update", updater: () => entity });

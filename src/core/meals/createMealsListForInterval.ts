@@ -1,8 +1,8 @@
 import dayjs, { Dayjs } from "dayjs";
 import {
   createListData,
-  mapEntityToAddAction,
-  mapEntityToRemoveAction,
+  mapEntityToAddToListAction,
+  mapEntityToRemoveFromListAction,
 } from "../cache.ts";
 import type { Meal } from "../types.ts";
 import { filter, map, merge } from "rxjs";
@@ -21,13 +21,13 @@ export const createMealsListForInterval$ =
           filter((newMeal) =>
             dayjs(newMeal.dateTime).isBetween(from, to, null, "[)"),
           ),
-          map(mapEntityToAddAction),
+          map(mapEntityToAddToListAction),
         ),
         mealActions.remove$.pipe(
           filter((newMeal) =>
             dayjs(newMeal.dateTime).isBetween(from, to, null, "[)"),
           ),
-          map(mapEntityToRemoveAction),
+          map(mapEntityToRemoveFromListAction),
         ),
       ),
     );

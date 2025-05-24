@@ -3,8 +3,8 @@ import { share, tap, merge, map } from "rxjs";
 import type { IMealTemplateStorageInterface } from "./storageInterface.ts";
 import {
   createListData,
-  mapEntityToAddAction,
-  mapEntityToRemoveAction,
+  mapEntityToAddToListAction,
+  mapEntityToRemoveFromListAction,
 } from "../cache.ts";
 
 export const initMealTemplates = (
@@ -29,8 +29,8 @@ export const initMealTemplates = (
     createListData(
       storage.getMealTemplates,
       merge(
-        requestActions.add$.pipe(map(mapEntityToAddAction)),
-        requestActions.remove$.pipe(map(mapEntityToRemoveAction)),
+        requestActions.add$.pipe(map(mapEntityToAddToListAction)),
+        requestActions.remove$.pipe(map(mapEntityToRemoveFromListAction)),
       ),
     );
 

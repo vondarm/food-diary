@@ -11,9 +11,9 @@ export const getDayOvereatingLevel = (
 ): OvereatingLevel => {
   const relativeDiff = (kcalForDay - referenceKcal) / referenceKcal;
 
-  if (relativeDiff < -0.3) return "low";
-  if (relativeDiff < 0.0) return "normal";
-  if (relativeDiff < 0.3) return "high";
-  if (relativeDiff < 0.6) return "extra high";
+  if (relativeDiff < -0.13) return "low";
+  if (relativeDiff < 0.13) return "normal";
+  if (relativeDiff < 0.25) return "high";
+  if (relativeDiff < 0.5) return "extra high";
   return "incredible";
 };

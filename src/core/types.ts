@@ -12,3 +12,8 @@ export type MealTemplate = {
   kcal: number;
   weight: number;
 };
+
+export type PersonalSettings = {
+  uuid: "_personal_settings";
+  dailyIntake?: number;
+};
