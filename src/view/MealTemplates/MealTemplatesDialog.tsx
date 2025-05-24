@@ -16,6 +16,7 @@ import type { MealTemplate } from "../../core/types.ts";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { onRemoveMealTemplate } from "../CoreAdapter.tsx";
 import { ConfirmDialog } from "../common/Dialog/ConfigmDialog.tsx";
+import { stopPropagationDecorator } from "../common/lib.ts";
 
 interface Props {
   onChoose: (mealTemplate: MealTemplate) => void;
@@ -59,7 +60,10 @@ export const MealTemplatesDialog: FC<Props> = ({ onChoose, buttonText }) => {
                   message={`Удалить шаблон ${mealTemplate.name}?`}
                   onConfirm={deleteTemplate(mealTemplate)}
                   renderTrigger={(onClick) => (
-                    <IconButton color={"info"} onClick={onClick}>
+                    <IconButton
+                      color={"info"}
+                      onClick={stopPropagationDecorator(onClick)}
+                    >
                       <DeleteIcon color={"error"} />
                     </IconButton>
                   )}

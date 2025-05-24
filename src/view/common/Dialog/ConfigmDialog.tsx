@@ -1,5 +1,6 @@
 import { Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
 import { type FC, type ReactNode, useState } from "react";
+import { stopPropagationDecorator } from "../lib.ts";
 
 interface Props {
   message: string;
@@ -28,8 +29,8 @@ export const ConfirmDialog: FC<Props> = ({
       <Dialog open={isOpen} onClose={close}>
         <DialogTitle>{message}</DialogTitle>
         <DialogActions>
-          <Button onClick={confirm}>Да</Button>
-          <Button onClick={close}>Отмена</Button>
+          <Button onClick={stopPropagationDecorator(confirm)}>Да</Button>
+          <Button onClick={stopPropagationDecorator(close)}>Отмена</Button>
         </DialogActions>
       </Dialog>
     </>
